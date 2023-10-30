@@ -1,0 +1,71 @@
+body{
+    font-size: 16px;
+}
+
+/*TABLE*/
+.t1 caption{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: larger;
+    font-weight: bold;
+    text-align: left;
+  }
+  
+  .t1{
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border-radius: 5px;
+    overflow: hidden; /* allows the border-radius property to take effect even with background-color added for tfoot*/
+    width: 85%;
+    background-color: #fff;
+    box-shadow: 0px 10px 10px 5px rgba(0,0,0,.13);
+    margin: 5px auto;
+  }
+  
+  
+  
+  .t1 thead tr{
+    font-weight: bold;
+    font-size: 14px;
+    background-color: aquamarine;
+    border-bottom: 1px dashed #494949;
+  }
+  
+  .t1 thead tr td{
+    padding-left: 10px;
+  }
+  
+  .t1 tbody tr{
+    font-size: 14px;
+  }
+  
+  .t1 tbody tr:nth-last-child(even){
+    background-color: rgb(240, 240, 240);
+  }
+  
+  .t1 tbody tr td{
+    padding-left: 10px;
+  }
+  
+  .t1 tfoot tr{
+    font-size: 14px;
+    background-color: yellow;
+    border-top: 1px dashed #494949;
+  }
+  
+  .t1 tfoot tr td{
+    padding-left: 10px;
+  }
+  
+  .t1 tbody tr{
+    border-top: 1px dotted grey;
+  }
+  
+  .t1 tbody tr:nth-child(1){
+    border-top: none;
+  }
+  
+  .t1 tbody tr:hover{
+    background-color:darkslategray;
+    color: white;
+  }

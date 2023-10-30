@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <title>AUDIT | Sick Hours</title>
+                <meta charset="UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                <link rel="stylesheet" href="style.css">
+                <link rel="shortcut icon" href="#"> <!-- Removes the favico 404 error -->
+
+                <!-- Make sure that jquery is referenced first before executing any jquery in the javascript file --> 
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+                <script src="GenerateTable.js"></script> <!-- Our main javascript file. -->
+                
+                <!-- Jquery function that executes when the DOM is fully loaded and safe to manipulate  -->
+                <script>
+                    $(document).ready(function(){
+                        // Fetch - GET data from server and view a data on a generated table dynamically
+                        GenerateTable('dynamic_table');
+                    });  
+                </script>
+            </head>
+            <body>
+                <!-- <table id="dynamic_table" class="t1" title="https://jsonplaceholder.typicode.com/todos/1"></table> -->
+
+                <!-- Dynamically Generated Table -->
+                <div class="table_div">
+                    <table id="dynamic_table" class="t1" title="https://jsonplaceholder.typicode.com/todos">
+                </div>
+            </body>
+        </html>
