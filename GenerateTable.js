@@ -24,7 +24,6 @@ const GenerateTable = (tableId) => {
                 cell.innerHTML = headerName.toUpperCase()
 
             }
-
             let tableRow = document.createElement("TR");
 
             // Traverse through each value in an object
@@ -40,7 +39,6 @@ const GenerateTable = (tableId) => {
                     tableData.innerHTML = objValue
                 tableRow.appendChild(tableData)
             }
-
             tableBody.appendChild(tableRow)
         }
         else {
@@ -118,7 +116,7 @@ const getObjectValue = (object) => {
     let val = "<ol>"
     for (const property in object) {
         if (typeof object[property] === 'object')
-            val += `<br><strong><u>[${property.toUpperCase()}]</u> ${getObjectLowestLevelValue(object[property])}</strong>`
+            val += `<br><strong><u>${property.toUpperCase()}</u> ${getObjectLowestLevelValue(object[property])}</strong>`
         else
             val += ("<li>" + `<strong><u>${property.toUpperCase()}</u></strong></li> <i>${object[property]}</i>`)
     }
@@ -133,12 +131,9 @@ const getObjectValue = (object) => {
 const getObjectLowestLevelValue = (object) => {
     let val = ""
     for (const property in object) {
-        val += (`<li>${property.toUpperCase()}: <i style="font-weight:normal">${object[property]}</i></li>`)
+        val += (`<li style="font-weight:normal">${property.toUpperCase()}: <i>${object[property]}</i></li>`)
         if (typeof object[property] === 'object')
             return getObjectLowestLevelValue(object[property])
     }
     return val
 }
-
-
-
