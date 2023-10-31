@@ -131,7 +131,7 @@ const getObjectValue = (object) => {
 const getObjectLowestLevelValue = (object) => {
     let val = ""
     for (const property in object) {
-        val += (`<li style="font-weight:normal">${property.toUpperCase()}: <i>${object[property]}</i></li>`)
+        val += (`<li style="font-weight:bold">${property.toUpperCase()}: <i style="font-weight:normal">${object[property]}</i></li>`)
         if (typeof object[property] === 'object')
             return getObjectLowestLevelValue(object[property])
     }
