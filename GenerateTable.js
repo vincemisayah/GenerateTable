@@ -1,4 +1,28 @@
+// Helper Functions
+const getObjectValue = (object) =>{
+    let val = ""
+    for(const property in object){
+        val += ("<br><br>" + `<b>${property.toUpperCase()}: </b>` + object[property])
+        if(typeof object[property] === 'object'){
+            val += getObjectLowestLevelValue(object[property])
+        }
+    }
+    return val
+}
+
+const getObjectLowestLevelValue = (object) =>{
+    let val = ""
+    for(const property in object){
+        val += ("<br><br>" + `<b>${property.toUpperCase()}: </b>` + object[property])
+        if(typeof object[property] === 'object'){
+            return getObjectLowestLevelValue(object[property])
+        }
+    }
+    return val
+} 
+
 const GenerateTable = (tableId) =>{
+    console.log("Is object")
     // Initialize table components
     let table = document.getElementById(tableId)
     let tableHeader = table.createTHead();
@@ -28,7 +52,7 @@ const GenerateTable = (tableId) =>{
                 // Create data cell and append it to tableRow
                 let tableData = document.createElement("TD")
     
-                // TODO: approach this using recursion
+                // Recursively acquires the object value down to the lowest level
                 if(typeof objValue === 'object')
                     tableData.innerHTML = getObjectValue(objValue)
                 else
@@ -61,7 +85,12 @@ const GenerateTable = (tableId) =>{
 
                     // Create data cell and append it to tableRow
                     let tableData = document.createElement("TD")
-                    tableData.innerHTML = objValue
+
+                    if(typeof objValue === 'object')
+                        tableData.innerHTML = getObjectValue(objValue)
+                    else
+                        tableData.innerHTML = objValue
+
                     tableRow.appendChild(tableData)
                 }
 
@@ -103,23 +132,3 @@ async function fetchJSON(requestURL) {
     }
 }
 
-// Helper Functions
-const getObjectValue = (object) =>{
-    let val = ""
-    for(const property in object){
-        val += ("<br><br>" + `<b>${property.toUpperCase()}: </b>` + object[property])
-        if(typeof object[property] === 'object')
-            val += getObjectLowestLevelValue(object[property])
-    }
-    return val
-}
-
-const getObjectLowestLevelValue = (object) =>{
-    let val = ""
-    for(const property in object){
-        val += ("<br><br>" + `<b>${property.toUpperCase()}: </b>` + object[property])
-        if(typeof object[property] === 'object')
-            return getObjectLowestLevelValue(object[property])
-    }
-    return val
-} 
