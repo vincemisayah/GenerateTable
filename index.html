@@ -1,30 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
     <head>
         <title>AUDIT | Sick Hours</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <link rel="stylesheet" href="style.css">
-        <link rel="shortcut icon" href="#"> <!-- Removes the favico 404 error -->
+        <meta charset='UTF-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <link rel='shortcut icon' href='#'> <!-- Removes the favico 404 error -->
 
         <!-- Make sure that jquery is referenced first before executing any jquery in the javascript file --> 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="GenerateTable.js"></script> <!-- Our main javascript file. -->
-        
+        <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
+
+        <!-- Dynamic Table Generator. -->
+        <link rel='stylesheet' href='GenerateTable.css'>
+        <script src='GenerateTable.js'></script> 
+
+        <!-- Excel File Reader -->
+        <script src='https://unpkg.com/read-excel-file@5.x/bundle/read-excel-file.min.js'></script>
+        <script src='UploadExcelFileAndCompare.js'></script> 
+
+        <!-- Modal -->
+        <link rel='stylesheet' href='DisplayTableDataToModal.css'>
+        <script src='DisplayTableDataToModal.js'></script>
+
         <!-- Jquery function that executes when the DOM is fully loaded and safe to manipulate  -->
         <script>
-            $(document).ready(function(){
-                // Fetch - GET data from server and view a data on a generated table dynamically
-                GenerateTable('dynamic_table');
+            $(document).ready(async ( ) => { // This must be set to 'async' so the program won't proceed unless the GenerateTable() method is finished.
+                const capitalizedHeaderNames = false;
+                let targetId = 'payrollId';
+            
+                // Generates a table with data acquired from the provided url, which returns a list of json objects
+                let table = await GenerateTable('dynamic_table', targetId, 'http://localhost:8080/PunchInSystem/do/employeeSickHours', capitalizedHeaderNames)
+
+                // Provides features to upload an excel file and compare the target data against a selected column
+                // from the generated table.
+                UploadExcelFileAndCompare('excelFile', 'uploadButton', 'dynamic_table', 'totalAvailableHours', 'Available', '#eb4b49');
+                
+                // If the 3rd argument is empty, the function will proceed to using the generated table's
+                // header names. Note whether the 3rd argument of the method, GenerateTable is set to true or false.
+                let headerNames = ['payrollId', 'employeeName', 'usedHours', 'totalAvailableHours'];
+                DisplayTableDataToModal(table, targetId ,'Sample Modal Title', headerNames, 'totalAvailableHours', 'Available', '#eb4b49');
             });  
         </script>
+
+        <!-- Bootstrap required imports: JQuery and Popper.js (https://getbootstrap.com/docs/4.0/getting-started/introduction/) -->
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css'>
+        <script src='https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js'></script>
     </head>
     <body>
-        <!-- Dynamically Generated Table -->
-        <div class="table_div">
-            <table id="dynamic_table" class="t1" title="https://jsonplaceholder.typicode.com/albums">
+        <div class='container-fluid'>
+            <div class='container-fluid pt-3'>
+                <h1>Webpage Title</h1>
+                <h5>Some information about the page.</h5>
+            </div>
+
+            <!-- Top Grid Horizontal Option Layout -->
+            <div class='container pt-2 border rounded'>
+                <div class='row'>
+                    <!-- OPTION 1: Excel File Upload -->
+                    <div class='col m-3'>
+                        <div class='input-group'>
+                            <input type='file' class='form-control' accept='.xlsx' id='excelFile'  required>
+                            <button id='uploadButton' type='button' class='btn-info'>Upload</button>
+                        </div>
+                        Browse to open the excel file and then select Upload to view any mismatched items.
+                    </div>
+                    
+                    <!-- OPTION 2 -->
+                    <div class='col-4'></div>
+
+                    <!-- OPTION 3: Download Table as an Excel spreadsheet -->
+                    <div class='co-2  m-sm-5'>
+                        <button type='button' class='btn btn-success'>Download Excel</button>
+                    </div>
+                </div>
+            </div> 
+            
+            <!-- Modal window to be filled based on the clicked table row. -->
+            <dialog id='modal'> 
+            </dialog>
+        
+            <!-- Dynamically Generated Table -->
+            <div class='container-fluid pt-3'> 
+                <!-- Go to https://bytefish.medium.com/free-fake-apis-whenever-you-need-some-fake-data-549354dde29d for fake JSON Data samples -->
+                <table id='dynamic_table' class='t1'>
+            </div>
         </div>
     </body>
 </html>

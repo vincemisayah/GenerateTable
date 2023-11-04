@@ -1,0 +1,17 @@
+#modal{
+    padding: 1em;
+    max-width: 80ch;
+    border: 0;
+    border-radius: 6px;
+    box-shadow: 0 0 1em rgb(0 0 0 / .3);
+
+    & > * {
+        margin: 0 0 0.5rem 0;
+    }
+}
+
+#modal::backdrop{
+    /* background: linear-gradient(45deg,red, blue); */
+    background: rgb(0 0 0 / .4);
+    opacity: .4;
+}

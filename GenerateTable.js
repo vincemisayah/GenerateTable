@@ -1,83 +1,104 @@
 /**
- * 
  * @param {*} tableId Id of the referenced table
  * @returns Viewable data in a table format
  */
-const GenerateTable = (tableId) => {
-    // Initialize table components
-    let table       = document.getElementById(tableId)
-    let tableHeader = table.createTHead();
-    let tableBody   = table.createTBody();
-
-    // Get data from server
-    let fetchedDataPromise = (table.title !== undefined) ? getData(table.title) : null;
-    if (fetchedDataPromise === null)
-        return
-
-    fetchedDataPromise.then((res) => { // promise status is fulfilled
-        if (res.length === undefined) {
-            let row = tableHeader.insertRow(0);
-            let index = 0;
-            for (const property in res) {
-                let headerName = property;
-                let cell = row.insertCell(index++);
-                cell.innerHTML = headerName.toUpperCase()
-
-            }
-            let tableRow = document.createElement("TR");
-
-            // Traverse through each value in an object
-            for (const property in res) {
-                let objValue = res[property]
-                // Create data cell and append it to tableRow
-                let tableData = document.createElement("TD")
-
-                // Recursively acquires the object value down to the lowest level
-                if (typeof objValue === 'object')
-                    tableData.innerHTML = getObjectValue(objValue)
-                else
-                    tableData.innerHTML = objValue
-                tableRow.appendChild(tableData)
-            }
-            tableBody.appendChild(tableRow)
+const GenerateTable = (tableId, idName, getURL, toCapitalized) => {
+    return new Promise((resolve, reject) =>{
+        if(document.getElementById(tableId) === undefined){
+            reject('Failed');
         }
-        else {
-            // Create thead portion of the table
-            let row = tableHeader.insertRow(0);
-            const firstObject = res[0]
+        else{ // Resolve Portion
+            // Initialize table components
+            let table       = document.getElementById(tableId)
+            let tableHeader = table.createTHead();
+            let tableBody   = table.createTBody();
+            let tableRow    = null;
 
-            let index = 0;
-            for (const property in firstObject) {
-                let headerName = property;
-                let cell = row.insertCell(index++);
-                cell.innerHTML = headerName.toUpperCase()
+            // Get data from server
+            let fetchedDataPromise = (table.title !== undefined) ? getData(getURL) : null;
+            if (fetchedDataPromise === null)
+                return
 
-            }
+            fetchedDataPromise.then((res) => { // promise status is fulfilled
+                if (res.length === undefined) {
+                    let row = tableHeader.insertRow(0);
+                    let index = 0;
+                    for (const property in res) {
+                        let headerName = property;
+                        let cell = row.insertCell(index++);
+                        if(toCapitalized !== undefined && toCapitalized)
+                            cell.innerHTML = headerName.toUpperCase()
+                        else
+                            cell.innerHTML = headerName
+                    }
+                    tableRow = document.createElement("tr");
 
-            // Populate the table body
-            res.forEach(obj => {
-                let tableRow = document.createElement("TR");
+                    if(res[property] !== undefined && property === idName)
+                        tableRow.setAttribute("id", res[property])
 
-                // Traverse through each value in an object
-                for (const property in obj) {
-                    let objValue = obj[property]
+                    // Traverse through each value in an object
+                    for (const property in res) {
+                        let objValue = res[property]
+                        // Create data cell and append it to tableRow
+                        let tableData = document.createElement("td")
 
-                    // Create data cell and append it to tableRow
-                    let tableData = document.createElement("TD")
+                        // Recursively acquires the object value down to the lowest level
+                        if (typeof objValue === 'object')
+                            tableData.innerHTML = getObjectValue(objValue)
+                        else
+                            tableData.innerHTML = objValue
+                        tableRow.appendChild(tableData)
+                    }
+                    tableBody.appendChild(tableRow)
+                }
+                else {
+                    // Create thead portion of the table
+                    let row = tableHeader.insertRow(0);
+                    const firstObject = res[0]
 
-                    if (typeof objValue === 'object')
-                        tableData.innerHTML = getObjectValue(objValue)
-                    else
-                        tableData.innerHTML = objValue
+                    let index = 0;
+                    for (const property in firstObject) {
+                        let headerName = property;
+                        let cell = row.insertCell(index++);
+                        if(toCapitalized !== undefined && toCapitalized)
+                            cell.innerHTML = headerName.toUpperCase()
+                        else
+                            cell.innerHTML = headerName
 
-                    tableRow.appendChild(tableData)
+                    }
+
+                    // Populate the table body
+                    res.forEach(obj => {
+                        tableRow = document.createElement("tr");
+
+                        // Traverse through each value in an object
+                        for (const property in obj) {
+                            let objValue = obj[property]
+
+                            if(objValue !== undefined && property === idName)
+                                tableRow.setAttribute("id", objValue)
+
+                            // Create data cell and append it to tableRow
+                            let tableData = document.createElement("td")
+
+                            if (typeof objValue === 'object')
+                                tableData.innerHTML = getObjectValue(objValue)
+                            else
+                                tableData.innerHTML = objValue
+
+                            tableRow.appendChild(tableData)
+                        }
+
+                        tableBody.appendChild(tableRow)
+                    })
                 }
 
-                tableBody.appendChild(tableRow)
+                resolve(table);
+
+            }).catch((error) => { // Data not found
+                console.log(error)
             })
         }
-    }).catch((error) => { // Data not found
-        console.log(error)
     })
 }
 
@@ -131,7 +152,7 @@ const getObjectValue = (object) => {
 const getObjectLowestLevelValue = (object) => {
     let val = ""
     for (const property in object) {
-        val += (`<li style="font-weight:bold">${property.toUpperCase()}: <i style="font-weight:normal">${object[property]}</i></li>`)
+        val += (`<li style="font-weight:normal">${property.toUpperCase()}: <i style="font-weight:normal">${object[property]}</i></li>`)
         if (typeof object[property] === 'object')
             return getObjectLowestLevelValue(object[property])
     }
